@@ -2,16 +2,20 @@ package com.presentation.composecheck
 
 import android.os.Bundle
 import android.util.Log
+import android.view.GestureDetector
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.Composable
 import androidx.compose.unaryPlus
+import androidx.ui.core.Clip
 import androidx.ui.core.Text
 import androidx.ui.core.dp
 import androidx.ui.core.setContent
+import androidx.ui.foundation.VerticalScroller
+import androidx.ui.foundation.shape.RectangleShape
+import androidx.ui.foundation.shape.corner.CutCornerShape
+import androidx.ui.foundation.shape.corner.RoundedCornerShape
 import androidx.ui.graphics.Color
-import androidx.ui.layout.Column
-import androidx.ui.layout.FlexColumn
-import androidx.ui.layout.Padding
+import androidx.ui.layout.*
 import androidx.ui.material.*
 import androidx.ui.material.surface.Card
 import androidx.ui.res.imageResource
@@ -28,14 +32,17 @@ class MainActivity : AppCompatActivity() {
                         TopAppBar(title = { Text(text = "Sample") })
                     }
 
-                    expanded(flex = 1.0f) {
-                        ItemList()
+                    flexible(flex = 1.0f) {
+                        VerticalScroller {
+                            ItemList()
+                        }
                     }
 
                     inflexible {
                         BottomBarLayout()
                     }
                 }
+
             }
         }
     }
@@ -51,53 +58,97 @@ fun Demo() {
                 TopAppBar(title = { Text(text = "Sample") })
             }
 
-            expanded(flex = 1.0f) {
-                ItemList()
+            flexible(flex = 0.5f) {
+                VerticalScroller {
+                    ItemList()
+                }
             }
 
             inflexible {
                 BottomBarLayout()
             }
         }
+
     }
 }
 
 @Composable
 fun ItemList() {
     Column {
-        listOf("One", "Two", "Three", "Four", "Five").forEach {
-            Padding(padding = 12.dp) {
-                Button(text = it,
-                        style = TextButtonStyle(
+        listOf(
+            "One",
+            "Two",
+            "Three",
+            "Four",
+            "Five",
+            "Six",
+            "Seven",
+            "Eight",
+            "Nine",
+            "Ten",
+            "Eleven",
+            "Twelve",
+            "Thirteen",
+            "Fourteen",
+            "Fifteen"
+        ).forEach {
+
+            Card(
+                elevation = 16.dp,
+                shape = CutCornerShape(20),
+                modifier = Spacing(8.dp)
+            ) {
+                Padding(padding = 12.dp) {
+                    
+                    Container(expanded = true) {
+                        Button(text = it,
+                            modifier = Flexible(flex = 1.0f, tight = false),
+                            style = TextButtonStyle(
                                 contentColor = Color.Black
-                        ),
-                        onClick = {
-                            Log.d("DATA", "Clicked on $it")
-                        })
+                            ),
+                            onClick = {
+                                Log.d("DATA", "Clicked on ${it}")
+                            })
+                    }
+                }
             }
         }
     }
 }
 
 @Composable
+fun DisplayAlert(msg: String) {
+    AlertDialog(onCloseRequest = {},
+        text = { Text("Alert") },
+        title = { Text("Clicked on ${msg}")},
+        confirmButton = { Text("Okay")},
+        dismissButton = { Text("Cancel")})
+}
+
+@Composable
 fun BottomBarLayout() {
     BottomAppBar(
-            fabConfiguration = BottomAppBar.FabConfiguration(
-                    fabPosition = BottomAppBar.FabPosition.Center,
-                    fab = {
-                        FloatingActionButton(icon =
-                        +imageResource(R.drawable.cake))
-                    }),
-            navigationIcon = {
-                AppBarIcon(
-                        icon = +imageResource(R.drawable.market),
-                        onClick = {})
-            },
-
-            actionData = listOf(
-                    +imageResource(R.drawable.cherry),
-                    +imageResource(R.drawable.fries))
-    ) { actionImage -> AppBarIcon(icon = actionImage,
+        fabConfiguration = BottomAppBar.FabConfiguration(
+            cutoutShape = CutCornerShape(24.dp),
+            fabPosition = BottomAppBar.FabPosition.Center,
+            fab = {
+                FloatingActionButton(
+                    icon =
+                    +imageResource(R.drawable.cake)
+                )
+            }),
+        navigationIcon = {
+            AppBarIcon(
+                icon = +imageResource(R.drawable.market),
                 onClick = {})
+        },
+
+        actionData = listOf(
+            +imageResource(R.drawable.cherry),
+            +imageResource(R.drawable.fries)
+        )
+    ) { actionImage ->
+        AppBarIcon(icon = actionImage,
+            onClick = {})
     }
 }
